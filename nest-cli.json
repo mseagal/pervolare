@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/pervolare/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/pervolare/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/pervolare",
+  "projects": {
+    "pervolare": {
+      "type": "application",
+      "root": "apps/pervolare",
+      "entryFile": "main",
+      "sourceRoot": "apps/pervolare/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/pervolare/tsconfig.app.json"
+      }
+    },
+    "product": {
+      "type": "application",
+      "root": "apps/product",
+      "entryFile": "main",
+      "sourceRoot": "apps/product/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/product/tsconfig.app.json"
+      }
+    },
+    "characteristic": {
+      "type": "application",
+      "root": "apps/characteristic",
+      "entryFile": "main",
+      "sourceRoot": "apps/characteristic/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/characteristic/tsconfig.app.json"
+      }
+    }
+  }
+}
