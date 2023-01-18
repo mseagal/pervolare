@@ -24,6 +24,12 @@ export class CharacteristicController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Post('byIds')
+    findByIds(@Body('ids') ids: number[] = []): Observable<CharacteristicDto> {
+        return this.characteristicService.getCharacteristicsByIds(ids);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post()
     create(@Body()  createCharacteristicDto : CreateCharacteristicDto){
         const characteristicCreated = this.characteristicService.createCharacteristc(createCharacteristicDto);

@@ -20,6 +20,11 @@ export class CharacteristicController {
     return this.characteristicService.findOne(+id);
   }
 
+  @MessagePattern('get_characteristics_by_ids')
+  findByIds(@Payload('ids') ids: number[]): Promise<Characteristic[]> {
+    return this.characteristicService.findByIds(ids);
+  }
+
   @MessagePattern('create_characteristic')
   create(@Payload() createCharacteristicDto : CreateCharacteristicDto){
     const characteristicCreated = this.characteristicService.create(createCharacteristicDto);

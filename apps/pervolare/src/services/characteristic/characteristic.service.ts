@@ -21,6 +21,10 @@ export class CharacteristicService {
         return this.characteristicMicroservice.send('get_one_characteristics', { id });
     }
 
+    getCharacteristicsByIds(ids: number[]): Observable<CharacteristicDto> {
+        return this.characteristicMicroservice.send('get_characteristics_by_ids', { ids });
+    }
+
     createCharacteristc(createCharacteristicDto : CreateCharacteristicDto): Observable<CharacteristicDto> {
         return this.characteristicMicroservice.send('create_characteristic',createCharacteristicDto);
     }
