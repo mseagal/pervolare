@@ -1,6 +1,6 @@
 import { CharacteristicType } from "../../enums/characteristic-type.enum";
 
-export class Characteristic {
+export class CharacteristicDto {
 
   id: number;
   name: string;

@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AddCharacteristicToProductDto } from './dto/add-characteristic-to-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
-import { RemoveCharacteristicToProductDto } from './dto/remove-characteristic-to-product.dto';
+import { RemoveCharacteristicFromProductDto } from './dto/remove-characteristic-from-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { CharacteristicProductService } from './services/characteristic-product.service';
@@ -14,40 +15,41 @@ export class ProductController {
     private readonly productService : ProductService,
     private readonly characteristicProductService : CharacteristicProductService
   ){}
-  @Get()
+
+  @MessagePattern('get_all_products')
   findAll(): Promise<Product[]> {
     return this.productService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<Product> {
+  @MessagePattern('get_one_product')
+  findOne(@Payload('id') id: string): Promise<Product> {
     return this.productService.findOne(+id);
   }
 
-  @Post()
-  create(@Body()  createProductDto : CreateProductDto){
+  @MessagePattern('create_product')
+  create(@Payload()  createProductDto : CreateProductDto){
     const productCreated = this.productService.create(createProductDto);
     return productCreated;
   }
 
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto ) {
-    const productUpdated = await this.productService.update(+id,updateProductDto);
+  @MessagePattern('update_product')
+  async update(@Payload() updateProductDto: UpdateProductDto ) {
+    const productUpdated = await this.productService.update(updateProductDto);
     return productUpdated;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @MessagePattern('delete_product')
+  remove(@Payload('id') id: string) {
     return this.productService.remove(+id);
   }
   
-  @Post(':id/characteristic')
-  addCharacteristicToProduct(@Param('id') id: string, @Body() addCharacteristicToProductDto: AddCharacteristicToProductDto){
-    return this.characteristicProductService.addCharacteristicToProduct(+id,addCharacteristicToProductDto.characteristicIds);
+  @MessagePattern('add_characteristic_to_product')
+  addCharacteristicToProduct(@Payload() addCharacteristicToProductDto: AddCharacteristicToProductDto){
+    return this.characteristicProductService.addCharacteristicToProduct(addCharacteristicToProductDto);
   }
 
-  @Delete(':id/characteristic')
-  removeCharacteristicToProduct(@Param('id') id: string, @Body() addCharacteristicToProductDto: RemoveCharacteristicToProductDto){
-    return this.characteristicProductService.removeCharacteristicToProduct(+id,addCharacteristicToProductDto.characteristicIds);
+  @MessagePattern('remove_characteristic_to_product')
+  removeCharacteristicToProduct(@Payload() removeCharacteristicFromProductDto: RemoveCharacteristicFromProductDto){
+    return this.characteristicProductService.removeCharacteristicToProduct(removeCharacteristicFromProductDto);
   }
 }

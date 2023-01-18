@@ -1,9 +1,6 @@
-import { IsNumber, IsArray, ArrayNotEmpty, IsOptional } from "class-validator";
+import { IsNumber, IsArray, ArrayNotEmpty } from "class-validator";
 
 export class AddCharacteristicToProductDto{
-
-    @IsOptional()
-    productId: number;
 
     @IsArray()
     @ArrayNotEmpty()

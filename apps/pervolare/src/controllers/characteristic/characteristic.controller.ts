@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
-import { Characteristic } from '../../dto/characteristic/characteristic.dto';
+import { CharacteristicDto } from '../../dto/characteristic/characteristic.dto';
 import { CharacteristicService } from '../../services/characteristic/characteristic.service';
 import { CreateCharacteristicDto } from  "../../dto/characteristic/create-characteristic.dto";
 import { UpdateCharacteristicDto } from '../../dto/characteristic/update-characteristic.dto';
@@ -11,12 +11,12 @@ export class CharacteristicController {
     constructor(private readonly characteristicService : CharacteristicService){}
 
     @Get('')
-    findAll(): Observable<Characteristic[]> {
+    findAll(): Observable<CharacteristicDto[]> {
         return this.characteristicService.getAllCharacteristics();
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string): Observable<Characteristic> {
+    findOne(@Param('id') id: string): Observable<CharacteristicDto> {
         return this.characteristicService.getOneCharacteristic(+id);
     }
 
