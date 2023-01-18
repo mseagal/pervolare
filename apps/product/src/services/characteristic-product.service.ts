@@ -20,13 +20,18 @@ export class CharacteristicProductService {
   ): Promise<Product> {
     addCharacteristicToProductDto.characteristicIds.forEach(
       async (characteristicId) => {
-        const characteristicProduct =
-          this.characteristicProductRepository.create({
-            productId: addCharacteristicToProductDto.productId,
-            characteristicId,
-          });
-        await this.characteristicProductRepository.save(characteristicProduct);
-      },
+        if (!(await this.verifyProductAlreadyHasCharacteristic(addCharacteristicToProductDto.productId,characteristicId))) {
+          const characteristicProduct =
+            this.characteristicProductRepository.create({
+              productId: addCharacteristicToProductDto.productId,
+              characteristicId,
+            });
+  
+          await this.characteristicProductRepository.save(characteristicProduct);
+        }else{
+          // No se guarda registro
+        }
+      }
     );
     return await this.productService.findOne(addCharacteristicToProductDto.productId);
   }
@@ -38,5 +43,9 @@ export class CharacteristicProductService {
         removeCharacteristicFromProductDto.characteristicProductIds,
     );
     return await this.productService.findOne(removeCharacteristicFromProductDto.productId);
+  }
+
+  async verifyProductAlreadyHasCharacteristic(productId,characteristicId){
+    return await this.characteristicProductRepository.findOneBy({productId,characteristicId});
   }
 }
