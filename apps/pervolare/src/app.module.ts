@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
+import { CryptService } from './services/crypt/crypt.service';
 
 @Module({
   imports: [
@@ -47,7 +48,11 @@ import { User } from './users/entities/user.entity';
   providers: [
     AppService,
     CharacteristicService,
-    ProductService
+    ProductService,
+    CryptService
+  ],
+  exports:[
+    CryptService
   ]
 })
 export class AppModule {}
