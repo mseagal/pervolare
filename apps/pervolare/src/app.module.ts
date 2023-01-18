@@ -9,9 +9,22 @@ import { ProductController } from './controllers/product/product.controller';
 import { ProductService } from './services/product/product.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '',
+      database: 'pervolare',
+      entities: [User],
+      synchronize: true,
+    }),
+    TypeOrmModule.forFeature([User]),
     ClientsModule.register([
       { 
         name : 'CHARACTERISTIC_SERVICE',
