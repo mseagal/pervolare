@@ -7,7 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     ProductModule,
     {
-      transport: Transport.TCP
+      transport: Transport.TCP,
+      options: {
+        port: 3001
+      }
     }
   );
   app.useGlobalPipes(new ValidationPipe());

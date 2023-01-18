@@ -7,15 +7,35 @@ import { CharacteristicController } from './controllers/characteristic/character
 import { CharacteristicService } from './services/characteristic/characteristic.service';
 import { ProductController } from './controllers/product/product.controller';
 import { ProductService } from './services/product/product.service';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ClientsModule.register([
-      { name : 'CHARACTERISTIC_SERVICE' ,transport: Transport.TCP },
-      { name : 'PRODUCT_SERVICE' ,transport: Transport.TCP }
-    ])
+      { 
+        name : 'CHARACTERISTIC_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          port : 3002
+        }
+      },
+      { 
+        name : 'PRODUCT_SERVICE' ,
+        transport: Transport.TCP,
+        options: {
+          port : 3001
+        }
+      }
+    ]),
+    AuthModule,
+    UsersModule
   ],
   controllers: [AppController, CharacteristicController, ProductController],
-  providers: [AppService,CharacteristicService, ProductService],
+  providers: [
+    AppService,
+    CharacteristicService,
+    ProductService
+  ]
 })
 export class AppModule {}
