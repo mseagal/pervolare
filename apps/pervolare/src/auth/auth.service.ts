@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterUserDto } from '../dto/auth/register-user.dto';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -23,5 +24,9 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload)
     };
+  }
+
+  register(registerUserDto:RegisterUserDto){
+    return this.usersService.create(registerUserDto);
   }
 }

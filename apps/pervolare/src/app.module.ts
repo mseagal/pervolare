@@ -24,7 +24,6 @@ import { User } from './users/entities/user.entity';
       entities: [User],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User]),
     ClientsModule.register([
       { 
         name : 'CHARACTERISTIC_SERVICE',
