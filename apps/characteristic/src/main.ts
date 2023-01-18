@@ -1,4 +1,4 @@
-import { NestMicroserviceOptions } from '@nestjs/common/interfaces/microservices/nest-microservice-options.interface';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { Transport } from '@nestjs/microservices/enums';
@@ -11,6 +11,7 @@ async function bootstrap() {
       transport: Transport.TCP
     }
   );
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen();
 }
 bootstrap();

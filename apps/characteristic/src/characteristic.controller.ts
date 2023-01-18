@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices/decorators';
 import { CharacteristicService } from './characteristic.service';
 import { CreateCharacteristicDto } from './dto/create-characteristic.dto';
 import { UpdateCharacteristicDto } from './dto/update-characteristic.dto';
@@ -9,31 +10,30 @@ export class CharacteristicController {
 
   constructor(private readonly characteristicService : CharacteristicService){}
 
-  @Get()
-  findAll(): Promise<Characteristic[]> {
+  @MessagePattern('get_all_characteristics')
+  handleGetAllCharacteristics(): Promise<Characteristic[]> {
     return this.characteristicService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<Characteristic> {
+  @MessagePattern('get_one_characteristics')
+  findOne(@Payload('id') id: string): Promise<Characteristic> {
     return this.characteristicService.findOne(+id);
   }
 
-  @Post()
-  create(@Body()  createCharacteristicDto : CreateCharacteristicDto){
-    return "paso";
+  @MessagePattern('create_characteristic')
+  create(@Payload() createCharacteristicDto : CreateCharacteristicDto){
     const characteristicCreated = this.characteristicService.create(createCharacteristicDto);
     return characteristicCreated;
   }
 
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() updateCharacteristicDto: UpdateCharacteristicDto) {
-    const characteristicUpdated = await this.characteristicService.update(+id,updateCharacteristicDto);
+  @MessagePattern('update_characteristic')
+  async update(@Payload() updateCharacteristicDto: UpdateCharacteristicDto) {
+    const characteristicUpdated = await this.characteristicService.update(updateCharacteristicDto);
     return characteristicUpdated;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @MessagePattern('delete_characteristic')
+  remove(@Payload('id') id: string) {
     return this.characteristicService.remove(+id);
   }
 }

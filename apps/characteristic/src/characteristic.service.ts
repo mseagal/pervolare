@@ -27,9 +27,9 @@ export class CharacteristicService {
       return characteristicTypeCreated;
   }
 
-  async update(characteristicTypeId: number,updateCharacteristicDto: UpdateCharacteristicDto) : Promise<Characteristic> {
-      await this.characteristicRepository.update(characteristicTypeId,updateCharacteristicDto);
-      return this.findOne(characteristicTypeId);
+  async update(updateCharacteristicDto: UpdateCharacteristicDto) : Promise<Characteristic> {
+      await this.characteristicRepository.update(updateCharacteristicDto.id,updateCharacteristicDto);
+      return this.findOne(updateCharacteristicDto.id);
   }
 
   async remove(characteristicTypeId: number): Promise<UpdateResult> {
