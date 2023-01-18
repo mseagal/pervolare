@@ -4,7 +4,7 @@ import { CharacteristicType } from "../enums/characteristic-type.enum";
 export class CreateCharacteristicDto{
 
     @IsNotEmpty()
-    @MinLength(2)
+    @MinLength(1)
     @MaxLength(10)
     @IsAlphanumeric()
     name: string;
