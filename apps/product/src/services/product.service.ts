@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
+import { CharacteristicDto } from '../dto/characteristic.dto';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { Product } from '../entities/product.entity';
+import { CharacteristicProductService } from './characteristic-product.service';
+import { CharacteristicService } from './characteristic.service';
 
 @Injectable()
 export class ProductService {
+    
     constructor(
         @InjectRepository(Product)
         private productRepository: Repository<Product>,
+        private characteristicProductService : CharacteristicProductService,
+        private characteristicService : CharacteristicService
     ) {
     }
 
@@ -18,7 +24,22 @@ export class ProductService {
     }
 
     async findOne(id: number): Promise<Product> {
-        return this.productRepository.findOneBy({ id });
+        const product = this.productRepository.findOneBy({ id });
+        /* const characteristicsOfProduct = await this.characteristicProductService.findAllCharacteristicsOfProduct(id);
+        const characteristics = await this.characteristicService.getCharacteristicsByIds(characteristicsOfProduct.map((item) => item.characteristicId)).toPromise();
+        
+        const groupByType = characteristics.reduce((group,characteristic)=>{
+            const { type } = characteristic;
+            group[type] = group[type] ?? [];
+            group[type].push(characteristic);
+            return group;
+        }, {
+            COLOR : [],
+            SIZE : [],
+            BRAND : []
+        }); */
+        
+        return product;
     }
 
     create(createProductDto: CreateProductDto) {

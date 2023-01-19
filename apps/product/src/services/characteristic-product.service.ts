@@ -11,13 +11,12 @@ import { ProductService } from './product.service';
 export class CharacteristicProductService {
   constructor(
     @InjectRepository(CharacteristicProduct)
-    private characteristicProductRepository: Repository<CharacteristicProduct>,
-    private readonly productService: ProductService,
+    private characteristicProductRepository: Repository<CharacteristicProduct>
   ) {}
 
   async addCharacteristicToProduct(
     addCharacteristicToProductDto: AddCharacteristicToProductDto,
-  ): Promise<Product> {
+  ) {
     addCharacteristicToProductDto.characteristicIds.forEach(
       async (characteristicId) => {
         if (!(await this.verifyProductAlreadyHasCharacteristic(addCharacteristicToProductDto.productId,characteristicId))) {
@@ -33,19 +32,23 @@ export class CharacteristicProductService {
         }
       }
     );
-    return await this.productService.findOne(addCharacteristicToProductDto.productId);
+    return addCharacteristicToProductDto;
   }
 
   async removeCharacteristicToProduct(
     removeCharacteristicFromProductDto: RemoveCharacteristicFromProductDto,
-  ): Promise<Product> {
+  ) {
     await this.characteristicProductRepository.delete(
         removeCharacteristicFromProductDto.characteristicProductIds,
     );
-    return await this.productService.findOne(removeCharacteristicFromProductDto.productId);
+    return removeCharacteristicFromProductDto;
   }
 
-  async verifyProductAlreadyHasCharacteristic(productId,characteristicId){
+  async verifyProductAlreadyHasCharacteristic(productId:number,characteristicId:number){
     return await this.characteristicProductRepository.findOneBy({productId,characteristicId});
+  }
+
+  async findAllCharacteristicsOfProduct(productId:number){
+    return this.characteristicProductRepository.findBy({productId});
   }
 }
