@@ -3,14 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { CharacteristicDto } from '../dto/characteristic.dto';
 import { CreateProductDto } from '../dto/create-product.dto';
+import { ProductWithCombinationsDto } from '../dto/product-with-combinations.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { Product } from '../entities/product.entity';
+import { CharacteristicTypeSpanish } from '../enums/characteristic-type-spanish';
 import { CharacteristicProductService } from './characteristic-product.service';
 import { CharacteristicService } from './characteristic.service';
 
 @Injectable()
 export class ProductService {
-    
+   
     constructor(
         @InjectRepository(Product)
         private productRepository: Repository<Product>,
@@ -23,23 +25,68 @@ export class ProductService {
         return this.productRepository.find();
     }
 
-    async findOne(id: number): Promise<Product> {
-        const product = this.productRepository.findOneBy({ id });
-        /* const characteristicsOfProduct = await this.characteristicProductService.findAllCharacteristicsOfProduct(id);
-        const characteristics = await this.characteristicService.getCharacteristicsByIds(characteristicsOfProduct.map((item) => item.characteristicId)).toPromise();
+    async findOne(id: number): Promise<ProductWithCombinationsDto> {
+        const product = await this.productRepository.findOneBy({ id });
+        const characteristicsOfProduct = await this.characteristicProductService.findAllCharacteristicsOfProduct(id);
+        let productTemp = new Map();
+        let combinations: string[] = [];
+        if (characteristicsOfProduct.length) {
+            const characteristics = await this.characteristicService.getCharacteristicsByIds(characteristicsOfProduct.map((item) => item.characteristicId)).toPromise();
+            characteristics.forEach(characteristic => {
+                let type: string = CharacteristicTypeSpanish[characteristic.type] ?? characteristic.type;
+                this.addAttribute(productTemp,product.name, type , characteristic.name);
+            });
+            combinations = this.generateCombinations(productTemp,product.name);
+        }else{
+            // No available combinations
+        }
+
+        if (product) {
+            return { ...product, characteristics: characteristicsOfProduct, combinations };
+        }else{
+            return null;
+        }
         
-        const groupByType = characteristics.reduce((group,characteristic)=>{
-            const { type } = characteristic;
-            group[type] = group[type] ?? [];
-            group[type].push(characteristic);
-            return group;
-        }, {
-            COLOR : [],
-            SIZE : [],
-            BRAND : []
-        }); */
-        
-        return product;
+    }
+
+    private addAttribute(productTemp,product, type, value) {
+        if (!productTemp.has(product)) {
+            productTemp.set(product, new Map());
+        }
+        let productData = productTemp.get(product);
+        if (!productData.has(type)) {
+            productData.set(type, []);
+        }
+        productData.get(type).push(value);
+    }
+
+    private generateCombinations(productTemp,product) {
+        let combinations = [];
+        let productData = productTemp.get(product);
+        if (!productData) {
+            return [product];
+        }
+        let keys = Array.from(productData.keys());
+        if (keys.length === 0) {
+            return [product];
+        } else {
+            let tempCombinations = [];
+            let firstAttribute = keys[0];
+            for (let j = 0; j < productData.get(firstAttribute).length; j++) {
+                tempCombinations.push(product + " " + firstAttribute + " " + productData.get(firstAttribute)[j]);
+            }
+            for (let j = 1; j < keys.length; j++) {
+                let newCombinations = [];
+                for (let k = 0; k < tempCombinations.length; k++) {
+                    for (let l = 0; l < productData.get(keys[j]).length; l++) {
+                        newCombinations.push(tempCombinations[k] + " - " + keys[j] + " " + productData.get(keys[j])[l]);
+                    }
+                }
+                tempCombinations = newCombinations;
+            }
+            combinations = combinations.concat(tempCombinations);
+        }
+        return combinations;
     }
 
     create(createProductDto: CreateProductDto) {

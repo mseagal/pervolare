@@ -17,21 +17,21 @@ export class CharacteristicProductService {
   async addCharacteristicToProduct(
     addCharacteristicToProductDto: AddCharacteristicToProductDto,
   ) {
-    addCharacteristicToProductDto.characteristicIds.forEach(
-      async (characteristicId) => {
-        if (!(await this.verifyProductAlreadyHasCharacteristic(addCharacteristicToProductDto.productId,characteristicId))) {
-          const characteristicProduct =
-            this.characteristicProductRepository.create({
-              productId: addCharacteristicToProductDto.productId,
-              characteristicId,
-            });
-  
-          await this.characteristicProductRepository.save(characteristicProduct);
-        }else{
-          // No se guarda registro
-        }
+
+    for (const characteristicId of addCharacteristicToProductDto.characteristicIds) {
+      if (!(await this.verifyProductAlreadyHasCharacteristic(addCharacteristicToProductDto.productId,characteristicId))) {
+        const characteristicProduct =
+          this.characteristicProductRepository.create({
+            productId: addCharacteristicToProductDto.productId,
+            characteristicId,
+          });
+
+        await this.characteristicProductRepository.save(characteristicProduct);
+
+      }else{
+        // No se guarda registro
       }
-    );
+    }
     return addCharacteristicToProductDto;
   }
 

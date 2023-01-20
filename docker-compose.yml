@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  db-pervolare:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'pervolare'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: ''
+    ports:
+      - 33060:3306
+    
+

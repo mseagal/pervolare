@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AddCharacteristicToProductDto } from './dto/add-characteristic-to-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ProductWithCombinationsDto } from './dto/product-with-combinations.dto';
 import { RemoveCharacteristicFromProductDto } from './dto/remove-characteristic-from-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -22,7 +23,7 @@ export class ProductController {
   }
 
   @MessagePattern('get_one_product')
-  findOne(@Payload('id') id: string): Promise<Product> {
+  findOne(@Payload('id') id: string): Promise<ProductWithCombinationsDto> {
     return this.productService.findOne(+id);
   }
 
@@ -44,8 +45,8 @@ export class ProductController {
   }
   
   @MessagePattern('add_characteristic_to_product')
-  addCharacteristicToProduct(@Payload() addCharacteristicToProductDto: AddCharacteristicToProductDto){
-    return this.characteristicProductService.addCharacteristicToProduct(addCharacteristicToProductDto);
+  async addCharacteristicToProduct(@Payload() addCharacteristicToProductDto: AddCharacteristicToProductDto){
+    return await this.characteristicProductService.addCharacteristicToProduct(addCharacteristicToProductDto);
   }
 
   @MessagePattern('remove_characteristic_to_product')
