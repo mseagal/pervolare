@@ -17,10 +17,10 @@ import { CryptService } from './services/crypt/crypt.service';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'db-pervolare',
       port: 3306,
-      username: 'root',
-      password: '',
+      username: 'pervolare',
+      password: 'pervolare',
       database: 'pervolare',
       entities: [User],
       synchronize: true,
@@ -30,6 +30,7 @@ import { CryptService } from './services/crypt/crypt.service';
         name : 'CHARACTERISTIC_SERVICE',
         transport: Transport.TCP,
         options: {
+          host: 'microservice-characteristic',
           port : 3002
         }
       },
@@ -37,6 +38,7 @@ import { CryptService } from './services/crypt/crypt.service';
         name : 'PRODUCT_SERVICE' ,
         transport: Transport.TCP,
         options: {
+          host: 'microservice-product',
           port : 3001
         }
       }

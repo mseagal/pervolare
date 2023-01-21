@@ -8,11 +8,11 @@ import { Characteristic } from './entities/characteristic.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'db-pervolare',
       port: 3306,
-      username: 'root',
-      password: '',
-      database: 'pervolare-characteristic',
+      username: 'pervolare',
+      password: 'pervolare',
+      database: 'pervolare',
       entities: [Characteristic],
       synchronize: true,
     }),

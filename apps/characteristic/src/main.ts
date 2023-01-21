@@ -10,6 +10,7 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
+        host: 'microservice-characteristic',
         port: 3002
       }
     }

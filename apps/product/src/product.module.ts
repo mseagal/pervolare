@@ -12,11 +12,11 @@ import { CharacteristicService } from './services/characteristic.service';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'db-pervolare',
       port: 3306,
-      username: 'root',
-      password: '',
-      database: 'pervolare-product',
+      username: 'pervolare',
+      password: 'pervolare',
+      database: 'pervolare',
       entities: [Product,CharacteristicProduct],
       synchronize: true,
     }),
@@ -26,6 +26,7 @@ import { CharacteristicService } from './services/characteristic.service';
         name : 'CHARACTERISTIC_SERVICE',
         transport: Transport.TCP,
         options: {
+          host: 'microservice-characteristic',
           port : 3002
         }
       }

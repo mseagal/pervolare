@@ -1,14 +1,42 @@
-version: '3.8'
-
+version: "3.5"
 services:
   db-pervolare:
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_DATABASE: 'pervolare'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: ''
+      MYSQL_DATABASE: pervolare
+      MYSQL_USER: pervolare
+      MYSQL_PASSWORD: pervolare
+      MYSQL_ROOT_PASSWORD: example
     ports:
-      - 33060:3306
-    
+      - 3306:3306
 
+  gateway-pervolare:
+    container_name: gateway-pervolare
+    build:
+      context: .
+      dockerfile: Dockerfile.pervolare
+    ports:
+      - 3000:3000
+    depends_on: 
+      - db-pervolare
+
+  microservice-product:
+    container_name: microservice-product
+    build:
+      context: .
+      dockerfile: Dockerfile.product
+    ports:
+      - 3001:3001
+    depends_on: 
+      - db-pervolare
+
+  microservice-characteristic:
+    container_name: microservice-characteristic
+    build:
+      context: .
+      dockerfile: Dockerfile.characteristic
+    ports:
+      - 3002:3002
+    depends_on: 
+      - db-pervolare
